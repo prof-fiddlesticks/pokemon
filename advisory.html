@@ -1,0 +1,153 @@
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Trade System</title>
+    <style>
+        /* Center the form in the middle of the screen */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px; /* Increased width */
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #card-image {
+            width: 200px;
+            height: 200px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        #tradeResult {
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Card Trade System</h1>
+      <p> This is made by Tsunekazu Ishihara CEO <p>
+        <label for="cardInput">What card are you going to trade?</label>
+        <input type="text" id="cardInput" placeholder="Enter card name">
+        <button onclick="tradeCard()">Submit</button>
+
+        <p id="tradeResult"></p>
+        <img id="card-image" src="" alt="Card Image" />
+    </div>
+
+    <script>
+        function tradeCard() {
+            let userCard = document.getElementById("cardInput").value.trim();
+            let tradeResult = document.getElementById("tradeResult");
+            let cardImage = document.getElementById("card-image");
+
+            if (userCard === "Eevee VMAX") {
+                tradeResult.textContent = "That is worth a holo gold and a 200 damage card.";
+                cardImage.src = "https://m.media-amazon.com/images/I/710ugsdR7BL._AC_UF350,350_QL80_.jpg"; // Image for Mankey
+            } else if (userCard === "Silvally GX") {
+                tradeResult.textContent = "That is worth a V and a 200 damage card";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/149115_in_1000x1000.jpg"; // Image for Silvally GX
+            } else if (userCard === "Steelix EX") {
+                tradeResult.textContent = "That is worth a V and a 2013 card";
+                cardImage.src = "https://i.ebayimg.com/images/g/PgMAAOSwhNZicvFP/s-l1200.jpg"; // Image for Steelix EX
+            } else if (userCard === "Toxtricity EX") {
+                tradeResult.textContent = "That is worth a Holo Rare V and a 200 damage card.";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/523770_in_1000x1000.jpg"; // Image for Toxtricity EX
+            } else if (userCard === "Zamazenta V") {
+                tradeResult.textContent = "That is worth 2 Anniversaries along with a 200 damage card.";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/250299_in_1000x1000.jpg"; // Image for Zamazenta V
+            } else if (userCard === "Xerneas EX") {
+                tradeResult.textContent = "That is worth a V and a 80 damage card";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/90673_in_1000x1000.jpg"; // Image for Xerneas EX
+            } else if (userCard === "Zapdos EX Korean") {
+                tradeResult.textContent = "That is worth a V and an Anniversary.";
+                cardImage.src = "https://i.ebayimg.com/images/g/BWsAAOSwk8lmY0PI/s-l400.jpg"; // Image for Zapdos EX Korean
+            } else if (userCard === "Umitrio EX Japanese") {
+                tradeResult.textContent = "That is worth a V, a 180 damage card, and a 2013 card.";
+                cardImage.src = "https://tracazipangu.com/cdn/shop/products/045171_P_UMITORIOEX.jpg?v=1736997106"; // Image for Umitrioe EX
+            } else if (userCard === "Luxray EX") {
+                tradeResult.textContent = "That is worth a V and a 30 damage japanese card.";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/550112_in_1000x1000.jpg"; // Image for Luxray EX
+            }   else if (userCard === "Dhelmise VMAX") {
+                tradeResult.textContent = "That is worth a holo gold and a 80 damage card.";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/232380_in_1000x1000.jpg"; // Image for Luxray EX
+            } else if (userCard === "Crabominable V") {
+                tradeResult.textContent = "That is worth any V with a reasonable range of damage.";
+                cardImage.src = "https://i.ebayimg.com/images/g/uWYAAOSwO3BlQv7B/s-l400.jpg"; // Image for Luxray EX
+            }  else if (userCard === "Gyarados VMAX") {
+                tradeResult.textContent = "That is worth two EX's, and a V";
+                cardImage.src = "https://m.media-amazon.com/images/I/71J5CXuEvHL._AC_UF894,1000_QL80_.jpg"; // Image for Luxray EX
+            }   else if (userCard === "Tapu Koko EX") {
+                tradeResult.textContent = "That is worth a 180 damage card along with a 2013 card.";
+                cardImage.src = "https://52f4e29a8321344e30ae-0f55c9129972ac85d6b1f4e703468e6b.ssl.cf2.rackcdn.com/products/pictures/1789834.jpg"; // Image for Luxray EX
+            }  else if (userCard === "Flying Pikachu VMAX") {
+                tradeResult.textContent = "That is worth 2 V's, 1 GX, 2 EX's, and one tera orb. The price is expensive because it is the only VMAX anniversarie card.";
+                cardImage.src = "https://m.media-amazon.com/images/I/71SEdErKhfL.jpg"; // Image for Luxray EX
+            }else if (userCard === "Dhelmise VMAX") {
+                tradeResult.textContent = "That is worth a Gyarados VMAX";
+                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/232380_in_1000x1000.jpg"; // Image for Luxray EX
+            } else {
+                tradeResult.textContent = "Card not found in the trade list.";
+                cardImage.src = ""; // Clear the image if card not found
+            }
+
+            // Make sure the image is visible
+            cardImage.style.display = cardImage.src ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>
+
