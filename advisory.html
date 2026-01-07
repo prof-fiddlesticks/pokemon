@@ -1,153 +1,438 @@
-<html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Trade System</title>
-    <style>
-        /* Center the form in the middle of the screen */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Card Trade Advisor</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#101a33;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --line: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --yellow:#ffd43b;
+      --red:#e3352b;
+      --blue:#2b6ee3;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
 
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px; /* Increased width */
-        }
+    *{ box-sizing:border-box; }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(43,110,227,.28), transparent 60%),
+        radial-gradient(900px 500px at 90% 15%, rgba(227,53,43,.26), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      padding: 26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
+    .app{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
+    @media (max-width: 900px){
+      .app{ grid-template-columns: 1fr; }
+    }
 
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    .panel{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
+    .header{
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
 
-        #card-image {
-            width: 200px;
-            height: 200px;
-            margin-top: 20px;
-            display: none;
-        }
+    .pokeball{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--red) 0 50%, #f2f2f2 50% 100%);
+      position:relative;
+      border: 2px solid rgba(255,255,255,.25);
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+      flex: 0 0 auto;
+    }
+    .pokeball::before{
+      content:"";
+      position:absolute;
+      left:-2px; right:-2px;
+      top:50%;
+      height:6px;
+      background:#111;
+      transform: translateY(-50%);
+      opacity:.9;
+    }
+    .pokeball::after{
+      content:"";
+      position:absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background:#f2f2f2;
+      border: 3px solid #111;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.22);
+    }
 
-        #tradeResult {
-            font-size: 16px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    </style>
+    .title h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .title p{
+      margin: 2px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .content{
+      padding: 18px;
+    }
+
+    .badgeRow{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .badge{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.85);
+    }
+    .badge strong{ color:#fff; }
+
+    label{
+      display:block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:flex-end;
+    }
+
+    input{
+      flex: 1 1 320px;
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(10,14,28,.55);
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+    }
+    input:focus{
+      border-color: rgba(255,212,59,.55);
+      box-shadow: 0 0 0 4px rgba(255,212,59,.12);
+    }
+
+    .btn{
+      min-width: 150px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,212,59,.98), rgba(255,175,59,.95));
+      color:#1b1400;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .08s ease, filter .2s ease;
+    }
+    .btn:hover{ filter: brightness(1.03); }
+    .btn:active{ transform: translateY(1px); }
+
+    .resultBox{
+      margin-top: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      min-height: 92px;
+    }
+
+    .resultTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .resultName{
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(43,110,227,.14);
+      color: rgba(255,255,255,.9);
+    }
+    .pill.bad{ background: rgba(227,53,43,.16); }
+
+    .tradeText{
+      font-size: 14px;
+      line-height: 1.35;
+      color: rgba(255,255,255,.88);
+    }
+
+    /* Right preview panel */
+    .previewWrap{
+      padding: 18px;
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .cardFrame{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: radial-gradient(600px 260px at 50% 0%, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      padding: 14px;
+    }
+
+    .imgStage{
+      width:100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(0,0,0,.20);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .imgStage img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:none;
+    }
+
+    .placeholder{
+      padding: 18px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .note{
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .footer{
+      padding: 12px 18px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
 
-    <div class="container">
-        <h1>Card Trade System</h1>
-      <p> This is made by Tsunekazu Ishihara CEO <p>
+    <!-- LEFT: Search + Result -->
+    <section class="panel">
+      <div class="header">
+        <div class="pokeball" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Pokémon Card Trade Advisor</h1>
+          <p>This is made by Tsunekazu Ishihara (CEO)</p>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="badgeRow">
+          <div class="badge">Tip: press <strong>Enter</strong> to submit</div>
+          <div class="badge">Case-insensitive matching ✅</div>
+        </div>
+
         <label for="cardInput">What card are you going to trade?</label>
-        <input type="text" id="cardInput" placeholder="Enter card name">
-        <button onclick="tradeCard()">Submit</button>
 
-        <p id="tradeResult"></p>
-        <img id="card-image" src="" alt="Card Image" />
-    </div>
+        <div class="row">
+          <input type="text" id="cardInput" placeholder="Example: Eevee VMAX" />
+          <button class="btn" id="submitBtn">Submit</button>
+        </div>
 
-    <script>
-        function tradeCard() {
-            let userCard = document.getElementById("cardInput").value.trim();
-            let tradeResult = document.getElementById("tradeResult");
-            let cardImage = document.getElementById("card-image");
+        <div class="resultBox">
+          <div class="resultTop">
+            <div class="resultName" id="resultName">No card selected</div>
+            <div class="pill" id="resultPill">Waiting</div>
+          </div>
+          <div class="tradeText" id="tradeResult">Enter a card name to see trade advice.</div>
+        </div>
+      </div>
 
-            if (userCard === "Eevee VMAX") {
-                tradeResult.textContent = "That is worth a holo gold and a 200 damage card.";
-                cardImage.src = "https://m.media-amazon.com/images/I/710ugsdR7BL._AC_UF350,350_QL80_.jpg"; // Image for Mankey
-            } else if (userCard === "Silvally GX") {
-                tradeResult.textContent = "That is worth a V and a 200 damage card";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/149115_in_1000x1000.jpg"; // Image for Silvally GX
-            } else if (userCard === "Steelix EX") {
-                tradeResult.textContent = "That is worth a V and a 2013 card";
-                cardImage.src = "https://i.ebayimg.com/images/g/PgMAAOSwhNZicvFP/s-l1200.jpg"; // Image for Steelix EX
-            } else if (userCard === "Toxtricity EX") {
-                tradeResult.textContent = "That is worth a Holo Rare V and a 200 damage card.";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/523770_in_1000x1000.jpg"; // Image for Toxtricity EX
-            } else if (userCard === "Zamazenta V") {
-                tradeResult.textContent = "That is worth 2 Anniversaries along with a 200 damage card.";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/250299_in_1000x1000.jpg"; // Image for Zamazenta V
-            } else if (userCard === "Xerneas EX") {
-                tradeResult.textContent = "That is worth a V and a 80 damage card";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/90673_in_1000x1000.jpg"; // Image for Xerneas EX
-            } else if (userCard === "Zapdos EX Korean") {
-                tradeResult.textContent = "That is worth a V and an Anniversary.";
-                cardImage.src = "https://i.ebayimg.com/images/g/BWsAAOSwk8lmY0PI/s-l400.jpg"; // Image for Zapdos EX Korean
-            } else if (userCard === "Umitrio EX Japanese") {
-                tradeResult.textContent = "That is worth a V, a 180 damage card, and a 2013 card.";
-                cardImage.src = "https://tracazipangu.com/cdn/shop/products/045171_P_UMITORIOEX.jpg?v=1736997106"; // Image for Umitrioe EX
-            } else if (userCard === "Luxray EX") {
-                tradeResult.textContent = "That is worth a V and a 30 damage japanese card.";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/550112_in_1000x1000.jpg"; // Image for Luxray EX
-            }   else if (userCard === "Dhelmise VMAX") {
-                tradeResult.textContent = "That is worth a holo gold and a 80 damage card.";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/232380_in_1000x1000.jpg"; // Image for Luxray EX
-            } else if (userCard === "Crabominable V") {
-                tradeResult.textContent = "That is worth any V with a reasonable range of damage.";
-                cardImage.src = "https://i.ebayimg.com/images/g/uWYAAOSwO3BlQv7B/s-l400.jpg"; // Image for Luxray EX
-            }  else if (userCard === "Gyarados VMAX") {
-                tradeResult.textContent = "That is worth two EX's, and a V";
-                cardImage.src = "https://m.media-amazon.com/images/I/71J5CXuEvHL._AC_UF894,1000_QL80_.jpg"; // Image for Luxray EX
-            }   else if (userCard === "Tapu Koko EX") {
-                tradeResult.textContent = "That is worth a 180 damage card along with a 2013 card.";
-                cardImage.src = "https://52f4e29a8321344e30ae-0f55c9129972ac85d6b1f4e703468e6b.ssl.cf2.rackcdn.com/products/pictures/1789834.jpg"; // Image for Luxray EX
-            }  else if (userCard === "Flying Pikachu VMAX") {
-                tradeResult.textContent = "That is worth 2 V's, 1 GX, 2 EX's, and one tera orb. The price is expensive because it is the only VMAX anniversarie card.";
-                cardImage.src = "https://m.media-amazon.com/images/I/71SEdErKhfL.jpg"; // Image for Luxray EX
-            }else if (userCard === "Dhelmise VMAX") {
-                tradeResult.textContent = "That is worth a Gyarados VMAX";
-                cardImage.src = "https://tcgplayer-cdn.tcgplayer.com/product/232380_in_1000x1000.jpg"; // Image for Luxray EX
-            } else {
-                tradeResult.textContent = "Card not found in the trade list.";
-                cardImage.src = ""; // Clear the image if card not found
-            }
+      <div class="footer">
+        <span>Pokéball UI mode: ON</span>
+        <span>Trade advice is stored in code (for now)</span>
+      </div>
+    </section>
 
-            // Make sure the image is visible
-            cardImage.style.display = cardImage.src ? "block" : "none";
-        }
-    </script>
+    <!-- RIGHT: Preview -->
+    <aside class="panel">
+      <div class="header">
+        <div class="pokeball" aria-hidden="true" style="filter:hue-rotate(190deg)"></div>
+        <div class="title">
+          <h1>Card Preview</h1>
+          <p>Image shows when card is found</p>
+        </div>
+      </div>
 
+      <div class="previewWrap">
+        <div class="cardFrame">
+          <div class="imgStage">
+            <img id="cardImage" alt="Card image preview" />
+            <div class="placeholder" id="imgPlaceholder">
+              Your card image will appear here.<br/>
+              (If a card isn’t found, nothing shows.)
+            </div>
+          </div>
+          <p class="note">
+            Tip: You can paste any image link you want for each card later.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    function normalize(s) {
+      return s.trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function setImage(url) {
+      const img = document.getElementById("cardImage");
+      const ph = document.getElementById("imgPlaceholder");
+
+      if (url && url.trim()) {
+        img.src = url;
+        img.style.display = "block";
+        ph.style.display = "none";
+      } else {
+        img.removeAttribute("src");
+        img.style.display = "none";
+        ph.style.display = "block";
+      }
+    }
+
+    function setResult(name, pillText, pillBad, text) {
+      document.getElementById("resultName").textContent = name;
+      const pill = document.getElementById("resultPill");
+      pill.textContent = pillText;
+      pill.classList.toggle("bad", !!pillBad);
+      document.getElementById("tradeResult").textContent = text;
+    }
+
+    function tradeCard() {
+      const raw = document.getElementById("cardInput").value;
+      const key = normalize(raw);
+
+      if (!key) {
+        setResult("No card entered", "Waiting", true, "Type a card name first.");
+        setImage("");
+        return;
+      }
+
+      // NOTE: Keeping your current if/else approach for now (we’ll switch to JSON later).
+      if (key === "eevee vmax") {
+        setResult("Eevee VMAX", "Found ✅", false, "That is worth a holo gold and a 200 damage card.");
+        setImage("https://m.media-amazon.com/images/I/710ugsdR7BL._AC_UF350,350_QL80_.jpg");
+      } else if (key === "silvally gx") {
+        setResult("Silvally GX", "Found ✅", false, "That is worth a V and a 200 damage card");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/149115_in_1000x1000.jpg");
+      } else if (key === "steelix ex") {
+        setResult("Steelix EX", "Found ✅", false, "That is worth a V and a 2013 card");
+        setImage("https://i.ebayimg.com/images/g/PgMAAOSwhNZicvFP/s-l1200.jpg");
+      } else if (key === "toxtricity ex") {
+        setResult("Toxtricity EX", "Found ✅", false, "That is worth a Holo Rare V and a 200 damage card.");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/523770_in_1000x1000.jpg");
+      } else if (key === "zamazenta v") {
+        setResult("Zamazenta V", "Found ✅", false, "That is worth 2 Anniversaries along with a 200 damage card.");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/250299_in_1000x1000.jpg");
+      } else if (key === "xerneas ex") {
+        setResult("Xerneas EX", "Found ✅", false, "That is worth a V and a 80 damage card");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/90673_in_1000x1000.jpg");
+      } else if (key === "zapdos ex korean") {
+        setResult("Zapdos EX Korean", "Found ✅", false, "That is worth a V and an Anniversary.");
+        setImage("https://i.ebayimg.com/images/g/BWsAAOSwk8lmY0PI/s-l400.jpg");
+      } else if (key === "umitroio ex japanese") {
+        setResult("Umitroio EX Japanese", "Found ✅", false, "That is worth a V, a 180 damage card, and a 2013 card.");
+        setImage("https://tracazipangu.com/cdn/shop/products/045171_P_UMITORIOEX.jpg?v=1736997106");
+      } else if (key === "luxray ex") {
+        setResult("Luxray EX", "Found ✅", false, "That is worth a V and a 30 damage japanese card.");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/550112_in_1000x1000.jpg");
+      } else if (key === "dhelmise vmax") {
+        // Keep ONE Dhelmise rule (you had two — choose the one you want)
+        setResult("Dhelmise VMAX", "Found ✅", false, "That is worth a holo gold and a 80 damage card.");
+        setImage("https://tcgplayer-cdn.tcgplayer.com/product/232380_in_1000x1000.jpg");
+      } else if (key === "crabominable v") {
+        setResult("Crabominable V", "Found ✅", false, "That is worth any V with a reasonable range of damage.");
+        setImage("https://i.ebayimg.com/images/g/uWYAAOSwO3BlQv7B/s-l400.jpg");
+      } else if (key === "gyarados vmax") {
+        setResult("Gyarados VMAX", "Found ✅", false, "That is worth two EX's, and a V");
+        setImage("https://m.media-amazon.com/images/I/71J5CXuEvHL._AC_UF894,1000_QL80_.jpg");
+      } else if (key === "tapu koko ex") {
+        setResult("Tapu Koko EX", "Found ✅", false, "That is worth a 180 damage card along with a 2013 card.");
+        setImage("https://52f4e29a8321344e30ae-0f55c9129972ac85d6b1f4e703468e6b.ssl.cf2.rackcdn.com/products/pictures/1789834.jpg");
+      } else if (key === "flying pikachu vmax") {
+        setResult("Flying Pikachu VMAX", "Found ✅", false, "That is worth 2 V's, 1 GX, 2 EX's, and one tera orb. The price is expensive because it is the only VMAX anniversarie card.");
+        setImage("https://m.media-amazon.com/images/I/71SEdErKhfL.jpg");
+      } else {
+        setResult(raw.trim(), "Not found ❌", true, "Card not found in the trade list.");
+        setImage("");
+      }
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", tradeCard);
+    document.getElementById("cardInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") tradeCard();
+    });
+  </script>
 </body>
 </html>
-
